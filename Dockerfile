@@ -30,7 +30,7 @@ WORKDIR /app
 COPY --from=builder /app/ChatGPT-To-API /app/ChatGPT-To-API
 
 # Expose the port where the application is running
-EXPOSE 8080
+EXPOSE 10080
 
 # Start the application
 CMD [ "./ChatGPT-To-API" ]

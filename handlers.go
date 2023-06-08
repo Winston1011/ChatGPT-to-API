@@ -3,11 +3,13 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"freechatgpt/internal/chatgpt"
 	"freechatgpt/internal/tokens"
 	typings "freechatgpt/internal/typings"
 	"freechatgpt/internal/typings/responses"
 	"io"
+	"net/http"
 	"os"
 	"strings"
 
@@ -139,6 +141,8 @@ func nightmare(c *gin.Context) {
 
 	var fulltext string
 
+	var messageId string
+
 	// Read the response byte by byte until a newline character is encountered
 	if original_request.Stream {
 		// Response content type is text/event-stream
@@ -165,6 +169,9 @@ func nightmare(c *gin.Context) {
 			// Parse the line as JSON
 			var original_response responses.Data
 			err = json.Unmarshal([]byte(line), &original_response)
+
+			messageId = original_response.Message.ID
+
 			if err != nil {
 				continue
 			}
@@ -182,7 +189,7 @@ func nightmare(c *gin.Context) {
 			}
 			tmp_fulltext := original_response.Message.Content.Parts[0]
 			original_response.Message.Content.Parts[0] = strings.ReplaceAll(original_response.Message.Content.Parts[0], fulltext, "")
-			translated_response := responses.NewChatCompletionChunk(original_response.Message.Content.Parts[0])
+			translated_response := responses.NewChatCompletionChunk(original_response.Message.Content.Parts[0], original_request.Model)
 
 			// Stream the response to the client
 			response_string := translated_response.String()
@@ -198,17 +205,42 @@ func nightmare(c *gin.Context) {
 			fulltext = tmp_fulltext
 		} else {
 			if !original_request.Stream {
-				full_response := responses.NewChatCompletion(fulltext)
+				full_response := responses.NewChatCompletion(fulltext, original_request.Model)
 				if err != nil {
 					return
 				}
 				c.JSON(200, full_response)
 				return
 			}
-			final_line := responses.StopChunk()
+			final_line := responses.StopChunk(original_request.Model)
 			c.Writer.WriteString("data: " + final_line.String() + "\n\n")
 
 			c.String(200, "data: [DONE]\n\n")
+
+			// 将chatgpt账户中的对话内容删除
+			url := "http://sj1.nonezero.top:8080/chatgpt/conversation/" + messageId
+			method := "PATCH"
+
+			payload := strings.NewReader(`{
+    				"is_visible": false
+			}`)
+
+			client := &http.Client{}
+			req, err := http.NewRequest(method, url, payload)
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			req.Header.Add("Authorization", token)
+			req.Header.Add("Content-Type", "application/json")
+
+			res, err := client.Do(req)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			defer res.Body.Close()
 			return
 
 		}

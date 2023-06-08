@@ -60,12 +60,12 @@ type Delta struct {
 	Role    string `json:"role"`
 }
 
-func NewChatCompletionChunk(text string) ChatCompletionChunk {
+func NewChatCompletionChunk(text string, model string) ChatCompletionChunk {
 	return ChatCompletionChunk{
 		ID:      "chatcmpl-QXlha2FBbmROaXhpZUFyZUF3ZXNvbWUK",
 		Object:  "chat.completion.chunk",
 		Created: 0,
-		Model:   "gpt-3.5-turbo-0301",
+		Model:   model,
 		Choices: []Choices{
 			{
 				Index: 0,
@@ -79,12 +79,12 @@ func NewChatCompletionChunk(text string) ChatCompletionChunk {
 	}
 }
 
-func StopChunk() ChatCompletionChunk {
+func StopChunk(model string) ChatCompletionChunk {
 	return ChatCompletionChunk{
 		ID:      "chatcmpl-QXlha2FBbmROaXhpZUFyZUF3ZXNvbWUK",
 		Object:  "chat.completion.chunk",
 		Created: 0,
-		Model:   "gpt-3.5-turbo-0301",
+		Model:   model,
 		Choices: []Choices{
 			{
 				Index:        0,
@@ -117,12 +117,12 @@ type usage struct {
 	TotalTokens      int `json:"total_tokens"`
 }
 
-func NewChatCompletion(full_test string) ChatCompletion {
+func NewChatCompletion(full_test string, model string) ChatCompletion {
 	return ChatCompletion{
 		ID:      "chatcmpl-QXlha2FBbmROaXhpZUFyZUF3ZXNvbWUK",
 		Object:  "chat.completion",
 		Created: int64(0),
-		Model:   "gpt-3.5-turbo-0301",
+		Model:   model,
 		Usage: usage{
 			PromptTokens:     0,
 			CompletionTokens: 0,

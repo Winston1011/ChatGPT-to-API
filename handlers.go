@@ -112,8 +112,9 @@ func getTokensHandler(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"data": res,
 		})
+	} else {
+		c.String(400, "no valid model tokens")
 	}
-	c.String(400, "no valid model tokens")
 }
 
 func optionsHandler(c *gin.Context) {

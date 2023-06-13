@@ -16,6 +16,7 @@ import (
 var HOST string
 var PORT string
 var ACCESS_TOKENS tokens.AccessToken
+var GPT4_TOKENS tokens.GPT4AccessToken
 
 var authorizations struct {
 	OpenAI_Email    string `json:"openai_email"`
@@ -98,6 +99,7 @@ func main() {
 	/// Admin routes
 	admin_routes.PATCH("/password", passwordHandler)
 	admin_routes.PATCH("/tokens", tokensHandler)
+	admin_routes.PATCH("/gpt4tokens", gpt4TokensHandler)
 	admin_routes.PATCH("/puid", puidHandler)
 	admin_routes.PATCH("/openai", openaiHandler)
 	/// Public routes

@@ -64,12 +64,24 @@ func tokensHandler(c *gin.Context) {
 	var request_tokens []string
 	err := c.BindJSON(&request_tokens)
 	if err != nil {
-		c.String(400, "tokens not provided")
+		c.String(400, "gpt3.5 tokens not provided")
 		return
 	}
 	ACCESS_TOKENS = tokens.NewAccessToken(request_tokens)
-	c.String(200, "tokens updated")
+	c.String(200, "gpt3.5 tokens updated")
 }
+func gpt4TokensHandler(c *gin.Context) {
+	// Get the request_tokens from the request (json) and update the request_tokens
+	var request_tokens []string
+	err := c.BindJSON(&request_tokens)
+	if err != nil {
+		c.String(400, "gpt4 tokens not provided")
+		return
+	}
+	GPT4_TOKENS = tokens.NewGPT4AccessToken(request_tokens)
+	c.String(200, "gpt4 tokens updated")
+}
+
 func optionsHandler(c *gin.Context) {
 	// Set headers for CORS
 	c.Header("Access-Control-Allow-Origin", "*")
@@ -94,9 +106,16 @@ func nightmare(c *gin.Context) {
 	translated_request := chatgpt.ConvertAPIRequest(original_request)
 
 	authHeader := c.GetHeader("Authorization")
-	token := ACCESS_TOKENS.GetToken()
-	log.Println("now token: ", token)
-	log.Println("origin request: ", translated_request)
+
+	var token string
+	if strings.HasPrefix(original_request.Model, "gpt-4") {
+		token = GPT4_TOKENS.GetGpt4Token()
+		log.Println("now token is gpt-4: ", token)
+	} else {
+		token = ACCESS_TOKENS.GetToken()
+		log.Println("now token is gpt-3.5: ", token)
+	}
+	log.Printf("origin request: %+v \n", translated_request)
 	if authHeader != "" {
 		customAccessToken := strings.Replace(authHeader, "Bearer ", "", 1)
 		// Check if customAccessToken starts with sk-

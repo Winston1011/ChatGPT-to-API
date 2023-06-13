@@ -95,6 +95,8 @@ func nightmare(c *gin.Context) {
 
 	authHeader := c.GetHeader("Authorization")
 	token := ACCESS_TOKENS.GetToken()
+	log.Println("now token: ", token)
+	log.Println("origin request: ", translated_request)
 	if authHeader != "" {
 		customAccessToken := strings.Replace(authHeader, "Bearer ", "", 1)
 		// Check if customAccessToken starts with sk-
@@ -207,7 +209,7 @@ func nightmare(c *gin.Context) {
 			// 将chatgpt账户中的对话内容删除
 			url := "http://sj1.nonezero.top:8080/chatgpt/conversation/" + conversationID
 
-			log.Println("message url", url)
+			log.Println("message url : ", url)
 
 			payload := strings.NewReader(`{
     				"is_visible": false

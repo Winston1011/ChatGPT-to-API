@@ -98,8 +98,10 @@ func main() {
 
 	/// Admin routes
 	admin_routes.PATCH("/password", passwordHandler)
+	admin_routes.GET("/password", getPasswordHandler)
 	admin_routes.PATCH("/tokens", tokensHandler)
 	admin_routes.PATCH("/gpt4tokens", gpt4TokensHandler)
+	admin_routes.GET("/gettokens", getTokensHandler)
 	admin_routes.PATCH("/puid", puidHandler)
 	admin_routes.PATCH("/openai", openaiHandler)
 	/// Public routes

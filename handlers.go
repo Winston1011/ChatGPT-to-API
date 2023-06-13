@@ -43,6 +43,13 @@ func passwordHandler(c *gin.Context) {
 	c.String(200, "password updated")
 }
 
+func getPasswordHandler(c *gin.Context) {
+	if ADMIN_PASSWORD == "" {
+		c.String(200, "password is empty")
+	}
+	c.String(200, "password is: "+ADMIN_PASSWORD)
+}
+
 func puidHandler(c *gin.Context) {
 	// Get the password from the request (json) and update the password
 	type puid_struct struct {
@@ -61,25 +68,52 @@ func puidHandler(c *gin.Context) {
 
 func tokensHandler(c *gin.Context) {
 	// Get the request_tokens from the request (json) and update the request_tokens
-	var request_tokens []string
-	err := c.BindJSON(&request_tokens)
+	var requestTokens []string
+	err := c.BindJSON(&requestTokens)
 	if err != nil {
 		c.String(400, "gpt3.5 tokens not provided")
 		return
 	}
-	ACCESS_TOKENS = tokens.NewAccessToken(request_tokens)
+	ACCESS_TOKENS = tokens.NewAccessToken(requestTokens)
 	c.String(200, "gpt3.5 tokens updated")
 }
+
 func gpt4TokensHandler(c *gin.Context) {
 	// Get the request_tokens from the request (json) and update the request_tokens
-	var request_tokens []string
-	err := c.BindJSON(&request_tokens)
+	var requestTokens []string
+	err := c.BindJSON(&requestTokens)
 	if err != nil {
 		c.String(400, "gpt4 tokens not provided")
 		return
 	}
-	GPT4_TOKENS = tokens.NewGPT4AccessToken(request_tokens)
+	GPT4_TOKENS = tokens.NewGPT4AccessToken(requestTokens)
 	c.String(200, "gpt4 tokens updated")
+}
+
+func getTokensHandler(c *gin.Context) {
+	// Get the request_tokens from the request (json) and update the request_tokens
+	type tokenStruct struct {
+		Model string `json:"model"`
+	}
+	var modelParam tokenStruct
+	var res []string
+	err := c.BindJSON(&modelParam)
+	if err != nil {
+		c.String(400, "request param is invalid")
+		return
+	}
+	if modelParam.Model == "gpt-3.5-turbo" {
+		res = ACCESS_TOKENS.GetPublicGpt3Tokens()
+		c.JSON(200, gin.H{
+			"data": res,
+		})
+	} else if modelParam.Model == "gpt-4" {
+		res = GPT4_TOKENS.GetPublicGpt4Tokens()
+		c.JSON(200, gin.H{
+			"data": res,
+		})
+	}
+	c.String(400, "no valid model tokens")
 }
 
 func optionsHandler(c *gin.Context) {

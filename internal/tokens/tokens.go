@@ -91,3 +91,11 @@ func (a *GPT4AccessToken) GetGpt4Token() string {
 	a.gpt4Tokens = append(a.gpt4Tokens[1:], gpt4Token)
 	return gpt4Token
 }
+
+func (a *AccessToken) GetPublicGpt3Tokens() (tokens []string) {
+	return a.tokens
+}
+
+func (a *GPT4AccessToken) GetPublicGpt4Tokens() (tokens []string) {
+	return a.gpt4Tokens
+}

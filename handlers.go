@@ -261,7 +261,7 @@ func nightmare(c *gin.Context) {
 			fulltext = tmp_fulltext
 		} else {
 			// 将chatgpt账户中的对话内容删除
-			url := "http://sj1.nonezero.top:8080/chatgpt/conversation/" + conversationID
+			url := "http://sj1.nonezero.top:4141/chatgpt/conversation/" + conversationID
 
 			log.Println("message url : ", url)
 
@@ -274,7 +274,6 @@ func nightmare(c *gin.Context) {
 
 			if err != nil {
 				log.Println(err)
-				return
 			}
 			req.Header.Add("Authorization", token)
 			req.Header.Add("Content-Type", "application/json")
@@ -282,7 +281,6 @@ func nightmare(c *gin.Context) {
 			res, err := client.Do(req)
 			if err != nil {
 				log.Println(err)
-				return
 			}
 			defer res.Body.Close()
 

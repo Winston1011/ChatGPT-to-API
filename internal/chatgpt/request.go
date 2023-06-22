@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"log"
 	"math/rand"
 	"os"
 	"strings"
@@ -66,6 +67,7 @@ func SendRequest(message ChatGPTRequest, access_token string) (*http.Response, e
 	}
 
 	apiUrl := "https://chat.openai.com/backend-api/conversation"
+	//apiUrl := "http://sj1.nonezero.top:4141/chatgpt/conversation"
 	if API_REVERSE_PROXY != "" {
 		apiUrl = API_REVERSE_PROXY
 	}
@@ -77,6 +79,7 @@ func SendRequest(message ChatGPTRequest, access_token string) (*http.Response, e
 	}
 
 	request, err := http.NewRequest(http.MethodPost, apiUrl, bytes.NewBuffer(body_json))
+	log.Println(request)
 	if err != nil {
 		return &http.Response{}, err
 	}

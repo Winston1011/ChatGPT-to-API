@@ -1,8 +1,8 @@
 package main
 
 import (
+	"ChatGPT-to-API/internal/tokens"
 	"encoding/json"
-	"freechatgpt/internal/tokens"
 	"log"
 	"os"
 	"strings"
@@ -51,7 +51,7 @@ func init() {
 		HOST = "127.0.0.1"
 	}
 	if PORT == "" {
-		PORT = "8080"
+		PORT = "4242"
 	}
 	accessToken := os.Getenv("ACCESS_TOKENS")
 	if accessToken != "" {

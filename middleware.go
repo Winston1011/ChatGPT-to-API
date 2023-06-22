@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"os"
 
-	gin "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 var ADMIN_PASSWORD string
@@ -13,7 +13,7 @@ var API_KEYS map[string]bool
 func init() {
 	ADMIN_PASSWORD = os.Getenv("ADMIN_PASSWORD")
 	if ADMIN_PASSWORD == "" {
-		ADMIN_PASSWORD = "TotallySecurePassword"
+		ADMIN_PASSWORD = "sk-epoch-personal-gpt-key"
 	}
 }
 

@@ -1,12 +1,12 @@
 package main
 
 import (
+	"ChatGPT-to-API/internal/chatgpt"
+	"ChatGPT-to-API/internal/tokens"
+	typings "ChatGPT-to-API/internal/typings"
+	"ChatGPT-to-API/internal/typings/responses"
 	"bufio"
 	"encoding/json"
-	"freechatgpt/internal/chatgpt"
-	"freechatgpt/internal/tokens"
-	typings "freechatgpt/internal/typings"
-	"freechatgpt/internal/typings/responses"
 	"io"
 	"log"
 	"net/http"
